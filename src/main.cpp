@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <SPI.h>
-#include <ILI9488.h>
 #include <Adafruit_GFX.h>
 
 
