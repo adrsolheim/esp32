@@ -1,6 +1,7 @@
 #include <Adafruit_GFX.h>      // Core graphics library
 #include <Adafruit_ST7735.h>   // ST7735 display library
 #include <SPI.h>               // SPI communication library
+#include <u8g2.h>
 
 // Define pins used for the ST7735
 #define TFT_CS     10
