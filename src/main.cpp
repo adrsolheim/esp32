@@ -4,11 +4,11 @@
 #include <Adafruit_ST7735.h>
 
 
-#define TFT_CS         10
-#define TFT_RST        8
-#define TFT_DC         9
-#define TFT_MOSI       11
 #define TFT_MISO       13
+#define TFT_MOSI       11
+#define TFT_CS         10
+#define TFT_DC         9
+#define TFT_RST        8
 #define SerialDebugging true
 
 
