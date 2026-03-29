@@ -12,11 +12,12 @@
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 void setup() {
+  // Initialize Serial Monitor
+  Serial.begin(115200); // ESP32 baud rate
+  Serial.println("Initializing ST7735 display...");
+
   pinMode(2, OUTPUT);
   digitalWrite(2, LOW); // Turn on the built-in LED to indicate setup is running
-  // Initialize Serial Monitor
-  Serial.begin(9600);
-  Serial.println("Initializing ST7735 display...");
 
   // Initialize display
   tft.initR(INITR_BLACKTAB); // Use INITR_BLACKTAB for most 1.8" displays
