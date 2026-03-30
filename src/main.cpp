@@ -13,11 +13,12 @@
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 void setup() {
-  setupWiFi();
   // Initialize Serial Monitor
   Serial.begin(115200); // ESP32 baud rate
+  delay(30000); // Make time for Serial Monitor to connect to inspect output
   Serial.println("Initializing ST7735 display...");
 
+  setupWiFi();
   pinMode(2, OUTPUT);
   digitalWrite(2, LOW); // Turn on the built-in LED to indicate setup is running
 

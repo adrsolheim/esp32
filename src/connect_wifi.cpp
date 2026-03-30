@@ -12,9 +12,10 @@ namespace {
     Preferences prefs;
 
     bool loadWiFiCredentialsFromNVS(std::string* ssid, std::string* password) {
-        prefs.begin("wifi", true); // Read-only mode
+        prefs.begin("wifi", false); // read/write mode because "wifi" might not exist yet
         *ssid = prefs.getString("ssid", "").c_str();
         *password = prefs.getString("pass", "").c_str();
+        prefs.end();
 
         return !ssid->empty();
     }
@@ -25,6 +26,7 @@ namespace {
         prefs.begin("wifi", false);
         prefs.putString("ssid", ssid.c_str());
         prefs.putString("pass", password.c_str());
+        prefs.end();
 
         return true;
     }
@@ -51,8 +53,16 @@ bool setupWiFi() {
             return false;
         #endif
     }
-    if (WiFi.begin(ssid.c_str(), pass.c_str()) != WL_CONNECTED) {
-        Serial.println("Failed to connect to WiFi");
+
+    WiFi.begin(ssid.c_str(), pass.c_str());
+    unsigned long start = millis();
+    while (WiFi.status() != WL_CONNECTED && millis() - start < 30000) {
+        Serial.println("Trying to connect to WiFi...");
+        delay(3000);
+    }
+
+    if (WiFi.status() != WL_CONNECTED) {
+        Serial.println("Failed to connect to WiFi...");
         return false;
     }
 
