@@ -1,7 +1,8 @@
 #include <Adafruit_GFX.h>      // Core graphics library
 #include <Adafruit_ST7735.h>   // ST7735 display library
 #include <SPI.h>               // SPI communication library
-#include <u8g2.h>
+#include "esp_wifi.h"
+#include "connect_wifi.h"
 
 // Define pins used for the ST7735
 #define TFT_CS     10
@@ -12,6 +13,7 @@
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 void setup() {
+  setupWiFi();
   // Initialize Serial Monitor
   Serial.begin(115200); // ESP32 baud rate
   Serial.println("Initializing ST7735 display...");
@@ -31,4 +33,6 @@ void setup() {
 }
 
 void loop() {
+  Serial.println("Looping...");
+  delay(1000);
 }
