@@ -28,34 +28,34 @@ namespace {
 
         return true;
     }
+}
 
-    bool setupWiFi() {
-        WiFi.mode(WIFI_STA);
-        std::string ssid;
-        std::string pass;
-        if (!loadWiFiCredentialsFromNVS(&ssid, &pass)) {
-            #if SECRETS_H_EXISTS
-                boolean wifiSaved = saveWiFiCredentialsToNVS(WIFI_SSID, WIFI_PASSWORD);
-                if (!wifiSaved) {
-                    Serial.println("Failed to save WiFi credentials to NVS");
-                    return false;
-                }
-                boolean wifiLoaded = loadWiFiCredentialsFromNVS(&ssid, &pass);
-                if (!wifiLoaded) {
-                    Serial.println("Failed to load WiFi credentials from NVS...");
-                    return false;
-                }
-            #else
-                Serial.println("Missing WiFi credentials...");
+bool setupWiFi() {
+    WiFi.mode(WIFI_STA);
+    std::string ssid;
+    std::string pass;
+    if (!loadWiFiCredentialsFromNVS(&ssid, &pass)) {
+        #if SECRETS_H_EXISTS
+            boolean wifiSaved = saveWiFiCredentialsToNVS(WIFI_SSID, WIFI_PASSWORD);
+            if (!wifiSaved) {
+                Serial.println("Failed to save WiFi credentials to NVS");
                 return false;
-            #endif
-        }
-        if (WiFi.begin(ssid.c_str(), pass.c_str()) != WL_CONNECTED) {
-            Serial.println("Failed to connect to WiFi");
+            }
+            boolean wifiLoaded = loadWiFiCredentialsFromNVS(&ssid, &pass);
+            if (!wifiLoaded) {
+                Serial.println("Failed to load WiFi credentials from NVS...");
+                return false;
+            }
+        #else
+            Serial.println("Missing WiFi credentials...");
             return false;
-        }
-
-        Serial.printf("\nConnected to %s\n", WiFi.SSID().c_str());
-        return true;
+        #endif
     }
+    if (WiFi.begin(ssid.c_str(), pass.c_str()) != WL_CONNECTED) {
+        Serial.println("Failed to connect to WiFi");
+        return false;
+    }
+
+    Serial.printf("\nConnected to %s\n", WiFi.SSID().c_str());
+    return true;
 }
