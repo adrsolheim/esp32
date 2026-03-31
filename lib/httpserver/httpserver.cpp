@@ -1,16 +1,19 @@
 #include <WebServer.h>
 
-WebServer server(80);
+namespace httpserver {
+    WebServer server(80);
 
-void init() {
-    server.begin();
-    server.on("/", HTTP_POST, respondWithSameMessage);
-}
-void listenForConnections() {
-    server.handleClient();
-}
-
-void respondWithSameMessage() {
-    String message = server.arg("message"); // get the "message" argument from the request
-    server.send(200, "text/plain", message.c_str());
+    void respondWithSameMessage() {
+        String reply = "ESP32 received your message: ";
+        String message = server.arg("message");
+        Serial.printf("Received message: %s\n", message.c_str());
+        server.send(200, "text/plain", (reply + message).c_str());
+    }
+    void init() {
+        server.begin();
+        server.on("/", HTTP_POST, respondWithSameMessage);
+    }
+    void listenForConnections() {
+        server.handleClient();
+    }
 }

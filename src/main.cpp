@@ -3,6 +3,7 @@
 #include <SPI.h>               // SPI communication library
 #include "esp_wifi.h"
 #include "connect_wifi.h"
+#include "httpserver.h"
 
 // Define pins used for the ST7735
 #define TFT_CS     10
@@ -19,6 +20,8 @@ void setup() {
   Serial.println("Initializing ST7735 display...");
 
   setupWiFi();
+  httpserver::init();
+
   pinMode(2, OUTPUT);
   digitalWrite(2, LOW); // Turn on the built-in LED to indicate setup is running
 
@@ -34,6 +37,5 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Looping...");
-  delay(1000);
+  httpserver::listenForConnections();
 }

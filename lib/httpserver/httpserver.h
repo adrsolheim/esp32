@@ -1,4 +1,6 @@
 #pragma once
 
-void init();
-void listenForConnections();
+namespace httpserver {
+    void init();
+    void listenForConnections();
+}
