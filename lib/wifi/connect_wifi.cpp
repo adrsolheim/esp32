@@ -67,5 +67,6 @@ bool setupWiFi() {
     }
 
     Serial.printf("\nConnected to %s\n", WiFi.SSID().c_str());
+    Serial.printf("\nIP Address: %s\n", WiFi.localIP().toString().c_str());
     return true;
 }
