@@ -7,6 +7,16 @@
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 namespace display {
+    bool tft_output(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap) {
+        if (y > tft.height() || x > tft.width()) {
+            return false; // Outside screen
+        }
+
+        tft.drawRGBBitmap(x, y, bitmap, w, h);
+
+        return true;
+    }
+
     void init() {
         Serial.println("Initializing ST7735 display...");
         pinMode(2, OUTPUT);
@@ -20,17 +30,8 @@ namespace display {
         TJpgDec.setCallback(tft_output); // Set the callback function for JPEG output
     }
 
-    bool tft_output(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *bitmap) {
-        if (y > tft.height() || x > tft.width()) {
-            return false; // Outside screen
-        }
 
-        tft.drawRGBBitmap(x, y, bitmap, w, h);
-
-        return true;
-    }
-
-    void displayImage(uint8_t *image, uint32_t imageSize) {
+    void displayImage(const uint8_t *image, uint32_t imageSize) {
         uint32_t t = millis();
 
         uint16_t w = 0, h = 0;
