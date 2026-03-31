@@ -8,7 +8,6 @@
     #define SECRETS_H_EXISTS 0
 #endif
 
-namespace {
     Preferences prefs;
 
     bool loadWiFiCredentialsFromNVS(std::string* ssid, std::string* password) {
@@ -30,43 +29,44 @@ namespace {
 
         return true;
     }
-}
 
-bool setupWiFi() {
-    WiFi.mode(WIFI_STA);
-    std::string ssid;
-    std::string pass;
-    if (!loadWiFiCredentialsFromNVS(&ssid, &pass)) {
-        #if SECRETS_H_EXISTS
-            boolean wifiSaved = saveWiFiCredentialsToNVS(WIFI_SSID, WIFI_PASSWORD);
-            if (!wifiSaved) {
-                Serial.println("Failed to save WiFi credentials to NVS");
+namespace wifi {
+    bool connect() {
+        WiFi.mode(WIFI_STA);
+        std::string ssid;
+        std::string pass;
+        if (!loadWiFiCredentialsFromNVS(&ssid, &pass)) {
+            #if SECRETS_H_EXISTS
+                boolean wifiSaved = saveWiFiCredentialsToNVS(WIFI_SSID, WIFI_PASSWORD);
+                if (!wifiSaved) {
+                    Serial.println("Failed to save WiFi credentials to NVS");
+                    return false;
+                }
+                boolean wifiLoaded = loadWiFiCredentialsFromNVS(&ssid, &pass);
+                if (!wifiLoaded) {
+                    Serial.println("Failed to load WiFi credentials from NVS...");
+                    return false;
+                }
+            #else
+                Serial.println("Missing WiFi credentials...");
                 return false;
-            }
-            boolean wifiLoaded = loadWiFiCredentialsFromNVS(&ssid, &pass);
-            if (!wifiLoaded) {
-                Serial.println("Failed to load WiFi credentials from NVS...");
-                return false;
-            }
-        #else
-            Serial.println("Missing WiFi credentials...");
+            #endif
+        }
+
+        WiFi.begin(ssid.c_str(), pass.c_str());
+        unsigned long start = millis();
+        while (WiFi.status() != WL_CONNECTED && millis() - start < 30000) {
+            Serial.println("Trying to connect to WiFi...");
+            delay(3000);
+        }
+
+        if (WiFi.status() != WL_CONNECTED) {
+            Serial.println("Failed to connect to WiFi...");
             return false;
-        #endif
-    }
+        }
 
-    WiFi.begin(ssid.c_str(), pass.c_str());
-    unsigned long start = millis();
-    while (WiFi.status() != WL_CONNECTED && millis() - start < 30000) {
-        Serial.println("Trying to connect to WiFi...");
-        delay(3000);
+        Serial.printf("\nConnected to %s\n", WiFi.SSID().c_str());
+        Serial.printf("\nIP Address: %s\n", WiFi.localIP().toString().c_str());
+        return true;
     }
-
-    if (WiFi.status() != WL_CONNECTED) {
-        Serial.println("Failed to connect to WiFi...");
-        return false;
-    }
-
-    Serial.printf("\nConnected to %s\n", WiFi.SSID().c_str());
-    Serial.printf("\nIP Address: %s\n", WiFi.localIP().toString().c_str());
-    return true;
 }
