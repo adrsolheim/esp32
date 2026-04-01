@@ -34,6 +34,7 @@ namespace httpserver {
             }
             case UPLOAD_FILE_WRITE: {
                 size_t newSize = imageSize + upload.currentSize;
+                Serial.println("Receiving file chunk, size: " + String(upload.currentSize) + " bytes, total received: " + String(newSize) + " bytes");
                 if (newSize > MAX_IMAGE_SIZE) {
                     Serial.println("Image upload too large");
                     resetImageBuffer();
@@ -58,7 +59,7 @@ namespace httpserver {
             }
             case UPLOAD_FILE_END: {
                 Serial.printf("Finished receiving file: %s, total size: %d bytes\n", upload.filename.c_str(), upload.totalSize);
-                display::displayImage(upload.buf, upload.currentSize);
+                display::displayImage(imageBuffer, imageSize);
                 break;
             }
             case UPLOAD_FILE_ABORTED: {
