@@ -8,27 +8,27 @@
     #define SECRETS_H_EXISTS 0
 #endif
 
-    Preferences prefs;
+Preferences prefs;
 
-    bool loadWiFiCredentialsFromNVS(std::string* ssid, std::string* password) {
-        prefs.begin("wifi", false); // read/write mode because "wifi" might not exist yet
-        *ssid = prefs.getString("ssid", "").c_str();
-        *password = prefs.getString("pass", "").c_str();
-        prefs.end();
+bool loadWiFiCredentialsFromNVS(std::string* ssid, std::string* password) {
+    prefs.begin("wifi", false); // read/write mode because "wifi" might not exist yet
+    *ssid = prefs.getString("ssid", "").c_str();
+    *password = prefs.getString("pass", "").c_str();
+    prefs.end();
 
-        return !ssid->empty();
+    return !ssid->empty();
+}
+bool saveWiFiCredentialsToNVS(std::string ssid, std::string password) {
+    if (ssid.empty()  || password.empty()) {
+        return false;
     }
-    bool saveWiFiCredentialsToNVS(std::string ssid, std::string password) {
-        if (ssid.empty()  || password.empty()) {
-            return false;
-        }
-        prefs.begin("wifi", false);
-        prefs.putString("ssid", ssid.c_str());
-        prefs.putString("pass", password.c_str());
-        prefs.end();
+    prefs.begin("wifi", false);
+    prefs.putString("ssid", ssid.c_str());
+    prefs.putString("pass", password.c_str());
+    prefs.end();
 
-        return true;
-    }
+    return true;
+}
 
 namespace wifi {
     bool connect() {
