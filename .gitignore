@@ -1,6 +1,11 @@
 # Client specific
 include/secrets.h
 secrets.h
+media/*.jpeg
+media/*.jpg
+media/*.png
+media/*.webp
+!media/display.jpeg
 
 .pio
 .vscode/.browse.c_cpp.db*
